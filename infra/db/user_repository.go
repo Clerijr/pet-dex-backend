@@ -35,7 +35,7 @@ func (ur *UserRepository) Delete(id uniqueEntityId.ID) error {
 }
 
 func (ur *UserRepository) Save(user *entity.User) error {
-	_, err := ur.dbconnection.NamedExec("INSERT INTO users (id, name, type, document, avatarUrl, email, phone, pass) VALUES (:id, :name, :type, :document, :avatarUrl, :email, :phone, :pass)", &user)
+	_, err := ur.dbconnection.NamedExec("INSERT INTO users (id, name, type, document, avatarUrl, email, phone, pass, role) VALUES (:id, :name, :type, :document, :avatarUrl, :email, :phone, :pass, :role)", &user)
 
 	if err != nil {
 		ur.logger.Error("error saving user: ", err)
@@ -122,6 +122,11 @@ func (ur *UserRepository) Update(userID uniqueEntityId.ID, userToUpdate entity.U
 		values = append(values, userToUpdate.PushNotificationsEnabled)
 	}
 
+	if userToUpdate.Role != "" {
+		query = query + " role =?,"
+		values = append(values, userToUpdate.Role)
+	}
+
 	query = query + " updated_at =?,"
 	values = append(values, time.Now())
 
@@ -153,7 +158,8 @@ func (ur *UserRepository) FindByID(ID uniqueEntityId.ID) (*entity.User, error) {
 		u.avatarUrl,
 		u.email,
 		u.phone,
-		u.pass
+		u.pass,
+		u.role
 	FROM
 		users u
 	WHERE
