@@ -48,8 +48,8 @@ func NewUser(user dto.UserInsertDto) *User {
 	}
 }
 
-func UserToUpdate(dto *dto.UserUpdateDto) *User {
-	user := &User{
+func UserToUpdate(dto dto.UserUpdateDto) User {
+	user := User{
 		Name:      dto.Name,
 		Document:  dto.Document,
 		AvatarURL: dto.AvatarURL,

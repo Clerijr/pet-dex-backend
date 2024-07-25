@@ -73,6 +73,7 @@ func (uc *UserUsecase) Login(loginDto *dto.UserLoginDto) (string, error) {
 		Id:    user.ID.String(),
 		Name:  user.Name,
 		Email: user.Email,
+		Role:  user.Role,
 		StandardClaims: jwt.StandardClaims{
 			ExpiresAt: time.Now().Add(time.Hour).Unix(),
 		},
